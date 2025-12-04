@@ -11,8 +11,8 @@ async function connection() {
     try {
         await sequelize.authenticate();
         console.log('Connection has been established successfully');
-        // await sequelize.sync();
-        // console.log('Table created successfully!');
+        await sequelize.sync();
+        console.log('Table created successfully!');
     } catch (error) {
         console.log('Unable to connect to the database:', error);
         // console.log('Table not created successfully');
