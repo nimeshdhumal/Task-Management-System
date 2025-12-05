@@ -47,4 +47,4 @@ const taskModel = sequelize.define('task',
     }
 );
 
-module.exports = { taskModel };
+module.exports = taskModel;
