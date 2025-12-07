@@ -1,33 +1,32 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
 
-const Task = sequelize.define('Task', {
+const Comment = sequelize.define('Comment', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    title: { type: DataTypes.STRING(255), allowNull: false },
-    description: { type: DataTypes.TEXT },
-    status: { type: DataTypes.ENUM('todo', 'in-progress', 'done'), defaultValue: 'todo' },
+    text: { type: DataTypes.TEXT, allowNull: false },
+    taskId: { type: DataTypes.INTEGER, allowNull: false },
     userId: { type: DataTypes.INTEGER, allowNull: false },
     createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
 }, {
-    tableName: 'tasks',
+    tableName: 'comments',
     timestamps: true
 });
 
-Task.associate = (models) => {
-    Task.belongsTo(models.User, {
+Comment.associate = (models) => {
+    Comment.belongsTo(models.Task, {
+        foreignKey: 'taskId',
+        as: 'task',
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE"
+    });
+
+    Comment.belongsTo(models.User, {
         foreignKey: 'userId',
         as: 'user',
         onDelete: "CASCADE",
         onUpdate: "CASCADE"
     });
-
-    Task.hasMany(models.Comment, {
-        foreignKey: 'taskId',
-        as: 'comments',
-        onDelete: "CASCADE",
-        onUpdate: "CASCADE"
-    });
 };
 
-module.exports = Task;
+module.exports = Comment;
