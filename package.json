@@ -17,9 +17,11 @@
   "homepage": "https://github.com/nimeshdhumal/Task-Management-System#readme",
   "description": "",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "joi": "^18.0.2",
+    "jsonwebtoken": "^9.0.3",
     "mysql2": "^3.15.3",
     "nodemon": "^3.1.11",
     "sequelize": "^6.37.7"

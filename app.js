@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const taskRoutes = require('./src/routes/taskRoutes');
+const userRoutes = require('./src/routes/authRoutes');
 const { sequelize } = require('./src/config/db');
 const User = require('./src/models/userModel');// Register all the models into the Sequelize.model();;;
 const Task = require('./src/models/taskModel');
@@ -9,6 +10,7 @@ const app = express();
 app.use(express.json());
 
 app.use('/tasks', taskRoutes);
+app.use('/auth', userRoutes);
 
 // async function tableCreation() {
 //     // await User.sync();
@@ -19,6 +21,7 @@ app.use('/tasks', taskRoutes);
 // tableCreation();
 
 const PORT = process.env.PORT;
+
 app.listen(PORT, () => {
     console.log(`Server is running on PORT: ${PORT}`);
 });
