@@ -13,19 +13,28 @@ module.exports = {
     login: async (req, res) => {
         const emailMatched = await userService.IsEmailAvail(req.body.email);
         let userDetails = await userService.getUserDetail(req.body.email);
+        const { id, name, email, role } = userDetails;
+        const user = { id, name, email, role };
         if (emailMatched == true) {
             let payload = req.body;
             let secretKey = process.env.JWT_SECRET_KEY;
             let JWT_EXPIRE = process.env.JWT_EXPIRES;
 
             const token = jwt.sign(payload, secretKey, { expiresIn: JWT_EXPIRE });
-            res.json({ success: true, message: "Login successful", token: token, userDetails });
+            res.json({ success: true, message: "Login successful", token: token, user });
         } else {
             res.status(404).json({ success: false, message: 'EMAIL NOT FOUND' });
         }
     },
 
-    getUserDetails: async (req,res) => {
-        await userService.getUserDetail();
+    userVerify: async (req, res) => {
+        const userDetails = await userService.getUserDetail(req.email);
+        if (userDetails != null) {
+            const { id, name, email, role } = userDetails;
+            const user = { id, name, email, role };
+            res.status(200).json(user);
+        } else {
+            res.status(400).json({ status: false, message: "USER NOT EXISTS" });
+        }
     }
 }
