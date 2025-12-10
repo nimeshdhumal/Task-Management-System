@@ -23,5 +23,9 @@ module.exports = {
         } else {
             res.status(404).json({ success: false, message: 'EMAIL NOT FOUND' });
         }
+    },
+
+    getUserDetails: async (req,res) => {
+        await userService.getUserDetail();
     }
 }
