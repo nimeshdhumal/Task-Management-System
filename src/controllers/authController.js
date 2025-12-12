@@ -1,5 +1,4 @@
 const userService = require('../services/authService');
-const jwt = require('jsonwebtoken');
 
 module.exports = {
     signUp: async (req, res) => {
@@ -13,21 +12,21 @@ module.exports = {
 
     login: async (req, res) => {
         try {
-            let result = await userService.login(req.body.email);
+            let result = await userService.login(req.body);
             res.status(200).json({ status: true, message: result });
         } catch (error) {
             res.status(400).json({ status: false, message: error.message });
         }
     },
 
-    userVerify: async (req, res) => {
-        const userDetails = await userService.getUserDetail(req.email);
-        if (userDetails != null) {
-            const { id, name, email, role } = userDetails;
-            const user = { id, name, email, role };
-            res.status(200).json(user);
-        } else {
-            res.status(400).json({ status: false, message: "USER NOT EXISTS" });
+    getUserDetailsByToken: async (req, res) => {
+        try {
+            let userToken = req.headers.authorization;
+            let user = await userService.getUserDetailsByToken(userToken);
+            res.status(200).json({ user });
+        } catch (error) {
+            res.status(400).json({ status: false, message: error.message });
         }
     }
+
 }

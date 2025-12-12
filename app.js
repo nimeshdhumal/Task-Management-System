@@ -20,7 +20,7 @@ app.use('/auth', authRoutes);
 // }
 
 // tableCreation();
-app.use(errorHandler);
+app.use(errorHandler); // Global error handler;;;
 const PORT = process.env.PORT;
 
 app.listen(PORT, () => {
