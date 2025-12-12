@@ -1,9 +1,17 @@
 const jwt = require('jsonwebtoken');
+const getUserDetail = require('../services/authService');
 
-const roleChecking = (req, res, next) => {
+const roleChecking = async (req, res, next) => {
 
-    console.log(req.role);
-
+    try {
+        const userRole = await getUserDetail.getUserDetail(req.email);
+        console.log(userRole.role);
+        if (userRole.role !== "admin") {
+            return res.status(401).json({ status: false, message: "Access Denied" });
+        } else { next(); }
+    } catch (error) {
+        res.status(500).json({ status: false, message: error });
+    }
 }
 
 module.exports = roleChecking;

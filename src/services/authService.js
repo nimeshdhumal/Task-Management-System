@@ -1,23 +1,30 @@
 const userModel = require('../models/userModel');
+const bcrypt = require('bcrypt');
+const AppError = require('../utils/AppError');
 
 module.exports = {
     signUp: async (data) => {
-        return await userModel.create(data);
-    },
-
-    IsEmailAvail: async (checkEmail) => {
-        const emailFound = await userModel.findOne({
-            where: { email: checkEmail },
+        const isEmailExists = await userModel.findOne({
             attributes: ['email'],
+            where: { email: data.email }
         });
-        return !!emailFound; // true if email exists, false if not
+
+        if (isEmailExists) throw new AppError("Email already exists", 400);//checking if email exists or not;;;
+
+        data.password = await bcrypt.hash(data.password, 10);//Convert the plain password into the Hash Code;;;
+
+        await userModel.create(data);//save data into DB;;;
+
     },
 
-    getUserDetail: async (email) => {
-        return await userModel.findOne({ where: { email: email } });
-    },
+    login: async (email) => {
+        const isEmailExists = await userModel.findOne({
+            attributes: ['email'],
+            where: { email: email }
+        });
 
-    login: async (data) => {
-        return await userModel.create(data);
+        if (isEmailExists) throw new AppError("Email already exists", 400);//checking if email exists or not;;;
+
+        // await userModel.create(data);
     }
 }
