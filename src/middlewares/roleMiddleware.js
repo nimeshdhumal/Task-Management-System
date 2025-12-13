@@ -1,4 +1,3 @@
-//const jwt = require('jsonwebtoken');
 const getUserDetail = require('../services/authService');
 
 const roleChecking = async (req, res, next) => {
