@@ -2,7 +2,7 @@ const getUserDetail = require('../services/authService');
 
 const roleChecking = async (req, res, next) => {
     try {
-        const userRole = await getUserDetail.getUserDetailsByEmailId(req.email);
+        const userRole = await getUserDetail.getUserDetailsByEmailId(req.user.email);
         if (userRole.role !== "admin") {
             return res.status(401).json({ status: false, message: "Access Denied" });
         } else { next(); }

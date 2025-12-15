@@ -6,7 +6,11 @@ module.exports = (req, res, next) => {
     const secretKey = process.env.JWT_SECRET_KEY;
     try {
         const decoded = jwt.verify(token, secretKey);
-        req.email = decoded.email;
+        req.user = {
+            id: decoded.id,
+            email: decoded.email,
+            role: decoded.role
+        };
         next();
     } catch (error) {
         res.status(400).json({ status: false, Message: 'TOKEN IS INVALID', error });

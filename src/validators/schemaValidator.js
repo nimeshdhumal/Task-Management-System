@@ -1,9 +1,9 @@
+const { text } = require('express');
 const Joi = require('joi');
 
 const createTasksSchema = Joi.object({
     title: Joi.string().required(),
     description: Joi.string().allow(''),
-    userId: Joi.number().required(),
     status: Joi.string().valid('todo', 'in-progress', 'done')
 });
 
@@ -19,4 +19,22 @@ const loginSchema = Joi.object({
     password: Joi.string().min(8).max(15).required(),
 });
 
-module.exports = { createTasksSchema, signUpSchema, loginSchema };
+const headerSchema = Joi.object({
+    authorization: Joi.string()
+        .required()
+        .pattern(/^Bearer\s.+$/)
+        .messages({
+            'any.required': 'Authorization header is required.',
+            'string.empty': 'Authorization header cannot be empty.',
+            'string.pattern.base': 'Authorization header must be in the format "Bearer <token>".',
+        }),
+    'content-type': Joi.string()
+        .valid('application/json')
+        .required()
+}).options({ allowUnknown: true });
+
+const commentSchema = Joi.object({
+    text: Joi.string().required(),
+});
+
+module.exports = { createTasksSchema, signUpSchema, loginSchema, headerSchema, commentSchema };

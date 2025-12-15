@@ -29,7 +29,7 @@ module.exports = {
         const user = { id, name, email, role };
 
         if (isEmailExists != null) {
-            let payload = data;
+            let payload = user;
             let secretKey = process.env.JWT_SECRET_KEY;
             let JWT_EXPIRE = process.env.JWT_EXPIRES;
 
