@@ -1,9 +1,25 @@
-module.exports = (schema, property = 'body') => {
+module.exports = ({ body, headers, query, params }) => {
     return (req, res, next) => {
-        const { error } = schema.validate(req[property]);
-        if (error) {
-            return res.status(400).json({ success: false, message: error.details[0].message });
+        if (body) {
+            const { error } = body.validate(req.body);
+            if (error) return res.status(400).json({ message: error.message });
         }
+
+        if (headers) {
+            const { error } = headers.validate(req.headers);
+            if (error) return res.status(401).json({ message: error.message });
+        }
+
+        if (query) {
+            const { error } = query.validate(req.query);
+            if (error) return res.status(400).json({ message: error.message });
+        }
+
+        if (params) {
+            const { error } = params.validate(req.params);
+            if (error) return res.status(400).json({ message: error.message });
+        }
+
         next();
     };
 };

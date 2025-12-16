@@ -2,13 +2,16 @@ const commentsModel = require('../models/commentsModel');
 
 module.exports = {
 
-    getSingleComment: async (id) => {
-        const commentReceived = await commentsModel.findOne({ where: { id: id } });
-        console.log(commentReceived);
+    getSingleCommnet: async (id) => {
+        return await commentsModel.findOne({ where: { id: id } });
     },
 
-    addCommentOnTask: async () => {
-        
+    updateComment: async (data) => {
+
+    },
+
+    deleteComment: async (id) => {
+
     }
 
 }

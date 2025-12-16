@@ -51,11 +51,19 @@ module.exports = {
     commentOnTask: async (req, res) => {
         try {
             const commentData = { ...req.body, userId: req.user.id, taskId: req.params.id };
-            const result = await taskService.commentOnTask(commentData);
-            res.status(200).json({ success: true, message: 'Comment added successfully', result });
+            const data = await taskService.commentOnTask(commentData);
+            res.status(200).json({ success: true, message: 'Comment added successfully', data });
+        } catch (error) {
+            res.status(400).json({ status: false, message: error.message });
+        }
+    },
+
+    getAllCommentsTask: async (req, res) => {
+        try {
+            const data = await taskService.getAllCommentsOfTask(req.params.id);
+            res.status(200).json({ success: true, data });
         } catch (error) {
             res.status(400).json({ status: false, message: error.message });
         }
     }
-
 }

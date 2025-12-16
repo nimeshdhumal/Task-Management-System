@@ -39,11 +39,15 @@ module.exports = {
             where: { id: commentData.userId }
         });
 
-        //IF any table id not matched then user cannot comment...
+        //IF userId not matched then user cannot comment...
         if (taskIdFound == null || userIdFound == null) {
             throw new AppError("You Could Not Comments on others tasks!", 400);
         } else {
             return await commentModel.create(commentData);
         }
+    },
+
+    getAllCommentsOfTask: async (taskId) => {
+        return await commentModel.findAll({ where: { taskId: taskId } });
     }
 };

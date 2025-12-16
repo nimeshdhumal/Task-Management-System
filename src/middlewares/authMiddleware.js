@@ -1,7 +1,10 @@
 const jwt = require('jsonwebtoken');
+const AppError = require('../utils/AppError');
 
 module.exports = (req, res, next) => {
     const authorizationHeader = req.headers.authorization;
+    if(!authorizationHeader) throw new AppError('Authorisation is required',404);
+
     const token = authorizationHeader.split(' ')[1];
     const secretKey = process.env.JWT_SECRET_KEY;
     try {
