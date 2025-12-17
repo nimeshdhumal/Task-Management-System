@@ -21,7 +21,7 @@ module.exports = {
         }
     },
 
-    getOne: async (req, res) => {
+    getTaskById: async (req, res) => {
         try {
             const task = await taskService.getTaskById(req.params.id);
             res.status(200).json({ success: true, data: task });
