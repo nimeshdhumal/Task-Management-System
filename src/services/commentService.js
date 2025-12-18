@@ -5,7 +5,7 @@ module.exports = {
 
     getSingleCommnet: async (commentId) => {
         const { id, text, taskId, userId } = await commentsModel.findOne({ where: { id: commentId } });
-        return { id, text, taskId, userId };
+        return { id, text, taskId, userId};
     },
 
     updateComment: async (commentData) => {

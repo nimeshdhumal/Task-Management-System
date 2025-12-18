@@ -9,8 +9,12 @@ module.exports = {
         return { id, title, description, status, createdAt, updatedAt };
     },
 
-    getAllTasks: async () => {
-        return await taskModel.findAll();
+    getAllTasks: async (pageno, limitno, sort, setInOrder) => {
+        const fetchedAllRowsWithCount = await taskModel.findAndCountAll({ order: [[sort, setInOrder]] });
+        const data = fetchedAllRowsWithCount.rows;
+        const total = fetchedAllRowsWithCount.count;
+        const totalPages = Math.ceil(total / limitno);
+        return { data, meta: { page: pageno, limit: limitno, total, totalPages } };
     },
 
     getTaskById: async (id) => {
@@ -47,7 +51,12 @@ module.exports = {
         }
     },
 
-    getAllCommentsOfTask: async (taskId) => {
-        return await commentModel.findAll({ where: { taskId: taskId } });
+    getAllCommentsOfTask: async (taskId, pageno, limitno) => {
+        //const await commentModel.findAll({ where: { taskId: taskId } });
+        const fetchedAllRowsWithCount = await commentModel.findAll({ where: { taskId: taskId } });
+        const data = fetchedAllRowsWithCount;
+        const total = fetchedAllRowsWithCount.length;
+        const totalPages = Math.ceil(total / limitno);
+        return { data, meta: { page: pageno, limit: limitno, total, totalPages } };
     }
 };
