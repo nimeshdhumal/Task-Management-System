@@ -10,7 +10,8 @@ const Comment = sequelize.define('Comment', {
     updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
 }, {
     tableName: 'comments',
-    timestamps: true
+    timestamps: true,
+    paranoid: true
 });
 
 Comment.associate = (models) => {

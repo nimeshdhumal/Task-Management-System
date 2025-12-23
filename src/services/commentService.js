@@ -5,7 +5,7 @@ module.exports = {
 
     getSingleCommnet: async (commentId) => {
         const { id, text, taskId, userId } = await commentsModel.findOne({ where: { id: commentId } });
-        return { id, text, taskId, userId};
+        return { id, text, taskId, userId };
     },
 
     updateComment: async (commentData) => {
@@ -29,7 +29,7 @@ module.exports = {
         }
     },
 
-    deleteComment: async (commentId, tokenUserId) => {
+    deleteComment: async (commentId, tokenUserId, force) => {
         const foundCommentId = await commentsModel.findOne({
             attributes: ['userId', 'id'],
             where: { id: commentId }
@@ -40,7 +40,11 @@ module.exports = {
         } else if (foundCommentId.userId != tokenUserId) {
             throw new AppError('You could not delete others user comments.', 400);
         } else {
-            await commentsModel.destroy({ where: { id: commentId } });
+            if (force === 'true') {
+                return await commentsModel.destroy({ where: { id }, force: true });
+            } else {
+                return await commentsModel.destroy({ where: { id } });
+            }
         }
     }
 }

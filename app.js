@@ -1,3 +1,4 @@
+
 require('dotenv').config();
 const express = require('express');
 const taskRoutes = require('./src/routes/taskRoutes');
@@ -15,12 +16,12 @@ app.use(express.json());
 app.use('/tasks', taskRoutes);
 app.use('/auth', authRoutes);
 app.use('/comments', commentRoutes);
-app.use('/admin',adminRoutes);
+app.use('/admin', adminRoutes);
 
 // async function tableCreation() {
 //     // await User.sync();
-//     await sequelize.sync();
-//     console.log("User table created successfully!!!");
+//     await sequelize.sync({ alter: true });
+//     console.log("Table created successfully!!!");
 // }
 
 // tableCreation();

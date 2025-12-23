@@ -1,5 +1,5 @@
 const taskService = require('../services/taskServices');
-const meta =null;
+const meta = null;
 module.exports = {
 
     create: async (req, res) => {
@@ -14,7 +14,8 @@ module.exports = {
 
     getAll: async (req, res) => {
         try {
-            const tasks = await taskService.getAllTasks(req.query.page, req.query.limit, req.query.sort, req.query.order);
+            const includeDeleted = false;
+            const tasks = await taskService.getAllTasks(req.query.page, req.query.limit, req.query.sort, req.query.order, req.user.id, includeDeleted);
             res.status(200).json({ success: true, data: tasks });
         } catch (error) {
             res.status(400).json({ status: false, message: error.message });
@@ -24,7 +25,7 @@ module.exports = {
     getTaskById: async (req, res) => {
         try {
             const task = await taskService.getTaskById(req.params.id);
-            res.status(200).json({ success: true, data: task , meta});
+            res.status(200).json({ success: true, data: task, meta });
         } catch (error) {
             res.status(400).json({ status: false, message: error.message });
         }
@@ -52,7 +53,7 @@ module.exports = {
         try {
             const commentData = { ...req.body, userId: req.user.id, taskId: req.params.id };
             const data = await taskService.commentOnTask(commentData);
-            res.status(200).json({ success: true, message: 'Comment added successfully', data , meta});
+            res.status(200).json({ success: true, message: 'Comment added successfully', data, meta });
         } catch (error) {
             res.status(400).json({ status: false, message: error.message });
         }
@@ -60,7 +61,7 @@ module.exports = {
 
     getAllCommentsTask: async (req, res) => {
         try {
-            const data = await taskService.getAllCommentsOfTask(req.params.id,req.query.page, req.query.limit);
+            const data = await taskService.getAllCommentsOfTask(req.params.id, req.query.page, req.query.limit);
             res.status(200).json({ success: true, data });
         } catch (error) {
             res.status(400).json({ status: false, message: error.message });

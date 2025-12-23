@@ -7,10 +7,9 @@ const Task = sequelize.define('Task', {
     description: { type: DataTypes.TEXT },
     status: { type: DataTypes.ENUM('todo', 'in-progress', 'done'), defaultValue: 'todo' },
     userId: { type: DataTypes.INTEGER, allowNull: false },
-    createdAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-    updatedAt: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
 }, {
     tableName: 'tasks',
+    paranoid: true,
     timestamps: true
 });
 

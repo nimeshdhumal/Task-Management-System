@@ -31,7 +31,8 @@ const User = sequelize.define('User', {
     }
 }, {
     tableName: 'users',
-    timestamps: true
+    timestamps: true,
+    paranoid: true
 });
 
 User.associate = (models) => {

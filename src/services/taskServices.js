@@ -9,16 +9,17 @@ module.exports = {
         return { id, title, description, status, createdAt, updatedAt };
     },
 
-    getAllTasks: async (pageno, limitno, sort, setInOrder) => {
-        const fetchedAllRowsWithCount = await taskModel.findAndCountAll({ order: [[sort, setInOrder]] });
-        const data = fetchedAllRowsWithCount.rows;
-        const total = fetchedAllRowsWithCount.count;
+    getAllTasks: async (pageno, limitno, sort, setInOrder, userId, includeDeleted) => {
+        const result = await taskModel.findAndCountAll({ order: [[sort, setInOrder]], paranoid: !includeDeleted, where: { userId: userId } });
+        const total = result.count;
         const totalPages = Math.ceil(total / limitno);
-        return { data, meta: { page: pageno, limit: limitno, total, totalPages } };
+        return { data: result.rows, meta: { page: pageno, limit: limitno, total, totalPages } };
     },
 
     getTaskById: async (id) => {
-        return await taskModel.findByPk(id);
+        const checkDeletedRows = await taskModel.findByPk(id);
+        if (checkDeletedRows == null) throw new AppError('Task Not Found', 404);
+        return checkDeletedRows;
     },
 
     updateTask: async (id, data) => {
@@ -26,8 +27,14 @@ module.exports = {
         return await taskModel.findByPk(id);
     },
 
-    deleteTask: async (id) => {
-        return await taskModel.destroy({ where: { id } });
+    deleteTask: async (id, force) => {
+        console.log(id, force);
+        if (force === 'true') {
+            return await taskModel.destroy({ where: { id }, force: true });
+        } else {
+            return await taskModel.destroy({ where: { id } });
+        }
+
     },
 
     commentOnTask: async (commentData) => {
@@ -52,7 +59,6 @@ module.exports = {
     },
 
     getAllCommentsOfTask: async (taskId, pageno, limitno) => {
-        //const await commentModel.findAll({ where: { taskId: taskId } });
         const fetchedAllRowsWithCount = await commentModel.findAll({ where: { taskId: taskId } });
         const data = fetchedAllRowsWithCount;
         const total = fetchedAllRowsWithCount.length;
