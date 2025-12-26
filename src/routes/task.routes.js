@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const taskController = require('../controllers/taskController');
-const validateRequest = require('../middlewares/validateRequest');
-const createTasksSchema = require('../validators/taskBodySchema');
-const authHeaders = require('../validators/authHeaderSchema');
-const commentSchema = require('../validators/commentSchema');
-const { taskSchema, paginationSchema } = require('../validators/querySchema');
-const tokenVerification = require('../middlewares/authMiddleware');
+const taskController = require('../controllers/task.controller');
+const validateRequest = require('../middlewares/validate.request');
+const createTasksSchema = require('../validators/task.body.schema');
+const authHeaders = require('../validators/auth.header.schema');
+const commentSchema = require('../validators/comment.schema');
+const { taskSchema, paginationSchema } = require('../validators/query.schema');
+const tokenVerification = require('../middlewares/auth.middleware');
 
 router.post('/', validateRequest({ body: createTasksSchema, headers: authHeaders }), tokenVerification, taskController.create);
 router.get('/', validateRequest({ query: paginationSchema }), tokenVerification, taskController.getAll);

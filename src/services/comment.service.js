@@ -1,5 +1,5 @@
-const commentsModel = require('../models/commentsModel');
-const AppError = require('../utils/AppError');
+const commentsModel = require('../models/comment.model');
+const AppError = require('../utils/app.error');
 
 module.exports = {
 

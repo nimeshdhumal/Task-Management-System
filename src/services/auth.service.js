@@ -1,7 +1,7 @@
-const userModel = require('../models/userModel');
+const userModel = require('../models/user.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const AppError = require('../utils/AppError');
+const AppError = require('../utils/app.error');
 
 module.exports = {
     signUp: async (data) => {

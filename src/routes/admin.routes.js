@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const adminController = require('../controllers/adminController');
-const tokenVerification = require('../middlewares/authMiddleware');
-const validateRequest = require('../middlewares/validateRequest');
-const { paginationSchema, taskSchema, deleteSchema } = require('../validators/querySchema');
-const roleChecking = require('../middlewares/roleMiddleware');
+const adminController = require('../controllers/admin.controller');
+const tokenVerification = require('../middlewares/auth.middleware');
+const validateRequest = require('../middlewares/validate.request');
+const { paginationSchema, taskSchema, deleteSchema } = require('../validators/query.schema');
+const roleChecking = require('../middlewares/role.middleware');
 
 router.get('/tasks', validateRequest({ query: paginationSchema }), tokenVerification, roleChecking, adminController.getAllTasks);
 router.delete('/tasks/:id', validateRequest({ params: taskSchema, query: deleteSchema }), tokenVerification, roleChecking, adminController.deleteTasks);

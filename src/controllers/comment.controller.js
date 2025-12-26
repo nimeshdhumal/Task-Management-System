@@ -1,4 +1,4 @@
-const commentService = require('../services/commentService');
+const commentService = require('../services/comment.service');
 const meta = null;
 
 module.exports = {

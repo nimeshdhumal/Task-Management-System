@@ -1,4 +1,4 @@
-const getUserDetail = require('../services/authService');
+const getUserDetail = require('../services/auth.service');
 
 const roleChecking = async (req, res, next) => {
     try {

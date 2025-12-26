@@ -1,7 +1,7 @@
-const taskModel = require('../models/taskModel');
-const userModel = require('../models/userModel');
-const commentModel = require('../models/commentsModel');
-const AppError = require('../utils/AppError');
+const taskModel = require('../models/task.model');
+const userModel = require('../models/user.model');
+const commentModel = require('../models/comment.model');
+const AppError = require('../utils/app.error');
 
 module.exports = {
     createTask: async (data) => {
