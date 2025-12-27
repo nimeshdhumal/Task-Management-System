@@ -4,8 +4,12 @@ const buildActor = (req) => ({
     sort: req.query.sort,
     order: req.query.order,
     userId: req.user.id,
+    userEmail: req.user.email,
+    userRole: req.user.role,
     id: req.params.id,
-    force: req.query.force
+    force: req.query.force,
+    body: req.body,
+    authorization: req.headers.authorization
 });
 
 module.exports = buildActor;

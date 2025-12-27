@@ -1,9 +1,11 @@
 const userService = require('../services/auth.service');
+const buildActor = require('../utils/actor.util');
 
 module.exports = {
     signUp: async (req, res) => {
         try {
-            await userService.signUp(req.body);
+            const actor = buildActor(req);
+            await userService.signUp(actor.body);
             res.status(200).json({ status: true, message: "User registered successfully." });
         } catch (error) {
             res.status(400).json({ status: false, message: error.message });
@@ -12,7 +14,8 @@ module.exports = {
 
     login: async (req, res) => {
         try {
-            let result = await userService.login(req.body);
+            const actor = buildActor(req);
+            let result = await userService.login(actor.body);
             res.status(200).json({ status: true, message: result });
         } catch (error) {
             res.status(400).json({ status: false, message: error.message });
@@ -21,7 +24,8 @@ module.exports = {
 
     getUserDetailsByToken: async (req, res) => {
         try {
-            let userToken = req.headers.authorization;
+            const actor = buildActor(req);
+            let userToken = actor.authorization;
             let user = await userService.getUserDetailsByToken(userToken);
             res.status(200).json({ user });
         } catch (error) {

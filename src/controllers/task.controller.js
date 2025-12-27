@@ -1,10 +1,12 @@
 const taskService = require('../services/task.service');
+const buildActor = require('../utils/actor.util');
 const meta = null;
 module.exports = {
 
     create: async (req, res) => {
         try {
-            const taskData = { ...req.body, userId: req.user.id };
+            const actor = buildActor(req);
+            const taskData = { ...actor.body, userId: actor.userId };
             const result = await taskService.createTask(taskData);
             res.status(200).json({ success: true, message: "Task created successfully", data: result });
         } catch (error) {
@@ -14,8 +16,9 @@ module.exports = {
 
     getAll: async (req, res) => {
         try {
+            const actor = buildActor(req);
             const includeDeleted = false;
-            const tasks = await taskService.getAllTasks(req.query.page, req.query.limit, req.query.sort, req.query.order, req.user.id, includeDeleted);
+            const tasks = await taskService.getAllTasks(actor.page, actor.limit, actor.sort, actor.order, actor.userId, includeDeleted);
             res.status(200).json({ success: true, data: tasks });
         } catch (error) {
             res.status(400).json({ status: false, message: error.message });
@@ -24,7 +27,8 @@ module.exports = {
 
     getTaskById: async (req, res) => {
         try {
-            const task = await taskService.getTaskById(req.params.id);
+            const actor = buildActor(req);
+            const task = await taskService.getTaskById(actor.id);
             res.status(200).json({ success: true, data: task, meta });
         } catch (error) {
             res.status(400).json({ status: false, message: error.message });
@@ -33,7 +37,8 @@ module.exports = {
 
     update: async (req, res) => {
         try {
-            const updated = await taskService.updateTask(req.params.id, req.body);
+            const actor = buildActor(req);
+            const updated = await taskService.updateTask(actor.id, actor.body);
             res.status(200).json({ success: true, data: updated });
         } catch (error) {
             res.status(400).json({ status: false, message: error.message });
@@ -42,7 +47,8 @@ module.exports = {
 
     delete: async (req, res) => {
         try {
-            await taskService.deleteTask(req.params.id);
+            const actor = buildActor(req);
+            await taskService.deleteTask(actor.id);
             res.status(200).json({ success: true, data: "Task deleted" });
         } catch (error) {
             res.status(400).json({ status: false, message: error.message });
@@ -51,7 +57,8 @@ module.exports = {
 
     commentOnTask: async (req, res) => {
         try {
-            const commentData = { ...req.body, userId: req.user.id, taskId: req.params.id };
+            const actor = buildActor(req);
+            const commentData = { ...actor.body, userId: actor.userId, taskId: actor.id };
             const data = await taskService.commentOnTask(commentData);
             res.status(200).json({ success: true, message: 'Comment added successfully', data, meta });
         } catch (error) {
@@ -61,7 +68,8 @@ module.exports = {
 
     getAllCommentsTask: async (req, res) => {
         try {
-            const data = await taskService.getAllCommentsOfTask(req.params.id, req.query.page, req.query.limit);
+            const actor = buildActor(req);
+            const data = await taskService.getAllCommentsOfTask(actor.id, actor.page, actor.limit);
             res.status(200).json({ success: true, data });
         } catch (error) {
             res.status(400).json({ status: false, message: error.message });
