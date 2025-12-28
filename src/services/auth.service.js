@@ -10,7 +10,7 @@ module.exports = {
             where: { email: data.email }
         });
 
-        if (isEmailExists) throw new AppError("Email already exists", 400);//checking if email exists or not;;;
+        if (isEmailExists) throw new AppError("User already exists",409);//checking if email exists or not;;;
 
         data.password = await bcrypt.hash(data.password, 10);//Convert the plain password into the Hash Code;;;
 
@@ -22,7 +22,6 @@ module.exports = {
         const isEmailExists = await userModel.findOne({ where: { email: data.email } });
 
         const matched = await bcrypt.compare(data.password, isEmailExists.password);
-
         if (matched == false) { throw new AppError("PASSWORD INVALID"); } //Checking the Passowrd;;;
 
         const { id, name, email, role } = isEmailExists;

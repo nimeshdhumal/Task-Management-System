@@ -1,4 +1,3 @@
-// validators/auth.header.schema.js
 const Joi = require("joi");
 
 const authHeaders = Joi.object({
