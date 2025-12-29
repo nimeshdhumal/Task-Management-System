@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
         if (!authorizationHeader) throw new AppError('Authorisation is required', 401);
 
         const parts = authorizationHeader.trim().split(' ');
-        console.log(parts);
+
         if (parts.length !== 2 || parts[0] !== 'Bearer') {
             throw new AppError('Invalid authorization format', 401);
         }

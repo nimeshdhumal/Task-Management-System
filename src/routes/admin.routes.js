@@ -5,6 +5,7 @@ const tokenVerification = require('../middlewares/auth.middleware');
 const validateRequest = require('../middlewares/validate.request');
 const { paginationSchema, taskSchema, deleteSchema } = require('../validators/query.schema');
 const roleChecking = require('../middlewares/role.middleware');
+const logger = require('../utils/logger');
 
 router.get('/tasks', validateRequest({ query: paginationSchema }), tokenVerification, roleChecking, adminController.getAllTasks);
 router.delete('/tasks/:id', validateRequest({ params: taskSchema, query: deleteSchema }), tokenVerification, roleChecking, adminController.deleteTasks);
