@@ -57,5 +57,4 @@ module.exports = {
         const { id, name, email, role } = userDetails;
         return { id, name, email, role };
     }
-
 }
