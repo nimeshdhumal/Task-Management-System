@@ -1,7 +1,29 @@
 const taskModel = require('../models/task.model');
-const userModel = require('../models/user.model');
 const commentModel = require('../models/comment.model');
 const AppError = require('../utils/app.error');
+
+const fetchComments = async (taskId, page, limit) => {
+    const offset = (page - 1) * limit;
+
+    const { rows, count } = await commentModel.findAndCountAll({
+        where: { taskId },
+        limit,
+        offset,
+        order: [['createdAt', 'DESC']],
+        raw: true
+    });
+
+    return {
+        data: rows,
+        meta: {
+            page,
+            limit,
+            total: count,
+            totalPages: Math.ceil(count / limit)
+        }
+    };
+};
+
 
 module.exports = {
     createTask: async (data) => {
@@ -32,44 +54,44 @@ module.exports = {
         }
     },
 
-    deleteTask: async (id, force) => {
-        console.log(id, force);
-        if (force === 'true') {
-            return await taskModel.destroy({ where: { id }, force: true, raw: true });
+    deleteTask: async (id, force, userId) => {
+        console.log(id, force, userId);
+        const fetchDataByUserId = await taskModel.findOne({ where: { id: id, userId }, raw: true });
+        console.log(fetchDataByUserId);
+        if (fetchDataByUserId == null) {
+            throw new AppError('Task Not Found OR You could not see others tasks.', 404);
         } else {
-            return await taskModel.destroy({ where: { id }, raw: true });
+            if (force === 'true') {
+                return await taskModel.destroy({ where: { id }, force: true, raw: true });
+            } else {
+                return await taskModel.destroy({ where: { id }, raw: true });
+            }
         }
-
     },
 
     commentOnTask: async (commentData) => {
-        //Getting the task_id from tasks table
-        const taskIdFound = await taskModel.findOne({
-            attributes: ['userId'],
-            where: { id: commentData.taskId },
-            raw: true
-        });
-
-        //Getting the userId from token;;
-        const userIdFound = await userModel.findOne({
-            attributes: ['id'],
-            where: { id: commentData.userId },
-            raw: true
-        });
-
-        //IF userId not matched then user cannot comment...
-        if (taskIdFound == null || userIdFound == null) {
-            throw new AppError("You Could Not Comments on others tasks!", 400);
-        } else {
-            return await commentModel.create(commentData);
-        }
+        const taskIdFound = await taskModel.findByPk(commentData.taskId, { raw: true });
+        if (taskIdFound == null) throw new AppError('Task does not exists', 404);
+        return await commentModel.create(commentData);
     },
 
-    getAllCommentsOfTask: async (taskId, pageno, limitno) => {
-        const fetchedAllRowsWithCount = await commentModel.findAll({ where: { taskId: taskId }, raw: true });
-        const data = fetchedAllRowsWithCount;
-        const total = fetchedAllRowsWithCount.length;
-        const totalPages = Math.ceil(total / limitno);
-        return { data, meta: { page: pageno, limit: limitno, total, totalPages } };
+    getAllCommentsOfTask: async (taskId, pageno, limitno, userId, role) => {
+        
+        //Fetch task ownership;;;
+        const task = await taskModel.findByPk(taskId, { attributes: ['userId'], raw: true });
+        if (!task) throw new AppError('Task not found', 404);
+
+        //Admin role;;;
+        if (role === 'admin') return await fetchComments(taskId, pageno, limitno);
+
+        //Task owner allow
+        if (task.userId === userId) return await fetchComments(taskId, pageno, limitno);
+
+        //comment participant allow;;;
+        const hasCommented = await commentModel.findOne({ where: { taskId, userId }, attributes: ['id'], raw: true });
+        if (hasCommented) return await fetchComments(taskId, pageno, limitno);
+
+        //Otherwise Deny;;;
+        throw new AppError('Access denied', 403);
     }
 };

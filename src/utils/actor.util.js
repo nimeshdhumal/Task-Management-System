@@ -3,8 +3,8 @@ const buildActor = (req) => ({
     userEmail: req.user.email,
     userRole: req.user.role,
     requestBody: req.body,
-    page: req.query.page,
-    limit: req.query.limit,
+    page: Number(req.query.page),
+    limit: Number(req.query.limit),
     sort: req.query.sort,
     order: req.query.order,
     id: req.params.id

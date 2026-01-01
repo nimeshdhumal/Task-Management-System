@@ -56,9 +56,11 @@ module.exports = {
     delete: async (req, res) => {
         try {
             const actor = buildActor(req);
-            await taskService.deleteTask(actor.id);
+            await taskService.deleteTask(actor.id, false, actor.userId);
+            logger.info('Task deleted by user ', actor.id);
             res.status(200).json({ success: true, data: "Task deleted" });
         } catch (error) {
+            logger.error('Task deleted by User Failed: ', error);
             res.status(400).json({ status: false, message: error.message });
         }
     },
@@ -66,7 +68,7 @@ module.exports = {
     commentOnTask: async (req, res) => {
         try {
             const actor = buildActor(req);
-            const commentData = { ...actor.body, userId: actor.userId, taskId: actor.id };
+            const commentData = { ...actor.requestBody, userId: actor.userId, taskId: actor.id };
             const data = await taskService.commentOnTask(commentData);
             res.status(200).json({ success: true, message: 'Comment added successfully', data, meta });
         } catch (error) {
@@ -77,7 +79,7 @@ module.exports = {
     getAllCommentsTask: async (req, res) => {
         try {
             const actor = buildActor(req);
-            const data = await taskService.getAllCommentsOfTask(actor.id, actor.page, actor.limit);
+            const data = await taskService.getAllCommentsOfTask(actor.id, actor.page, actor.limit,actor.userId,actor.userRole);
             res.status(200).json({ success: true, data });
         } catch (error) {
             res.status(400).json({ status: false, message: error.message });

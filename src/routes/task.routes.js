@@ -14,8 +14,8 @@ router.post('/', validateRequest({ body: createTasksSchema, headers: authHeaders
 router.get('/', validateRequest({ query: paginationSchema }), tokenVerification, taskController.getAll);
 router.get('/:id', validateRequest({ params: taskSchema }), tokenVerification, taskController.getTaskById);
 router.put('/:id', validateRequest({ body: createTasksSchema, headers: authHeaders, params: taskSchema }), tokenVerification, taskController.update);
-router.delete('/:id', validateRequest({ params: taskSchema }), taskController.delete);
+router.delete('/:id', validateRequest({ params: taskSchema }), tokenVerification, taskController.delete);
 router.post('/:id/comments', validateRequest({ body: commentSchema, params: taskSchema }), tokenVerification, taskController.commentOnTask);
-router.get('/:id/comments', validateRequest({ params: taskSchema, query: paginationSchema }), taskController.getAllCommentsTask);
+router.get('/:id/comments', validateRequest({ params: taskSchema, query: paginationSchema }), tokenVerification, taskController.getAllCommentsTask);
 
 module.exports = router;
