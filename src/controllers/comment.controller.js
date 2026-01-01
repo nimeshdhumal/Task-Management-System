@@ -7,7 +7,7 @@ module.exports = {
      getSingleCommnet: async (req, res) => {
           try {
                const actor = buildActor(req);
-               const data = await commentService.getSingleCommnet(actor.id);
+               const data = await commentService.getSingleComment(actor.id,actor.userId,actor.userRole);
                res.status(200).json({ success: true, data: data, meta });
           } catch (error) {
                res.status(400).json({ status: false, message: error.message });
