@@ -18,7 +18,8 @@ module.exports = {
     deleteTasks: async (req, res) => {
         try {
             const actor = buildActor(req);
-            await taskService.deleteTask(actor.id, actor.force);
+            await taskService.deleteTask(actor.id, actor.force, actor.userId);
+            console.log('actor.id:',actor.id,' actor.force',actor.force,' actor.userId:',actor.userId);
             res.status(200).json({ success: true, data: "Task deleted", meta });
         } catch (error) {
             res.status(400).json({ status: false, message: error.message });

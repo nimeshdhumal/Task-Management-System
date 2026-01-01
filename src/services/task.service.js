@@ -55,18 +55,18 @@ module.exports = {
     },
 
     deleteTask: async (id, force, userId) => {
-        console.log(id, force, userId);
-        const fetchDataByUserId = await taskModel.findOne({ where: { id: id, userId }, raw: true });
-        console.log(fetchDataByUserId);
-        if (fetchDataByUserId == null) {
-            throw new AppError('Task Not Found OR You could not see others tasks.', 404);
-        } else {
-            if (force === 'true') {
-                return await taskModel.destroy({ where: { id }, force: true, raw: true });
-            } else {
-                return await taskModel.destroy({ where: { id }, raw: true });
-            }
+        const deletedCount = await taskModel.destroy({
+            where: { id, userId },
+            force: force === 'true'
+        });
+
+        if (deletedCount === 0) {
+            throw new AppError(
+                'Task Not Found OR You could not delete others tasks.',
+                404
+            );
         }
+        return { deleted: true };
     },
 
     commentOnTask: async (commentData) => {
@@ -76,7 +76,7 @@ module.exports = {
     },
 
     getAllCommentsOfTask: async (taskId, pageno, limitno, userId, role) => {
-        
+
         //Fetch task ownership;;;
         const task = await taskModel.findByPk(taskId, { attributes: ['userId'], raw: true });
         if (!task) throw new AppError('Task not found', 404);

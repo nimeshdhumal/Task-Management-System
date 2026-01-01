@@ -5,9 +5,10 @@ const buildActor = (req) => ({
     requestBody: req.body,
     page: Number(req.query.page),
     limit: Number(req.query.limit),
-    sort: Number(req.query.sort),
-    order: Number(req.query.order),
-    id: Number(req.params.id)
+    sort: req.query.sort,
+    order: req.query.order,
+    id: Number(req.params.id),
+    force: req.query.force
 });
 
 module.exports = buildActor;

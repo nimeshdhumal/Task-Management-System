@@ -53,21 +53,20 @@ module.exports = {
     },
 
     deleteComment: async (commentId, tokenUserId, force) => {
-        const foundCommentId = await commentsModel.findOne({
-            attributes: ['userId', 'id'],
-            where: { id: commentId }
+        const deletedCount = await commentsModel.destroy({
+            where: {
+                id: commentId,
+                userId: tokenUserId
+            },
+            force: force === 'true'
         });
 
-        if (foundCommentId == null) {
-            throw new AppError('USER NOT FOUND', 404);
-        } else if (foundCommentId.userId != tokenUserId) {
-            throw new AppError('You could not delete others user comments.', 400);
-        } else {
-            if (force === 'true') {
-                return await commentsModel.destroy({ where: { commentId }, force: true });
-            } else {
-                return await commentsModel.destroy({ where: { commentId } });
-            }
+        if (deletedCount === 0) {
+            throw new AppError(
+                'Comment not found or you are not allowed to delete it',
+                404
+            );
         }
+        return { deleted: true };
     }
 }
