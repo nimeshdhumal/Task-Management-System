@@ -9,7 +9,7 @@ const { taskSchema, paginationSchema } = require('../validators/query.schema');
 const tokenVerification = require('../middlewares/auth.middleware');
 const logger = require('../utils/logger');
 
-logger.info('Task Routes called..');
+logger.info('Task Routes section started.');
 router.post('/', validateRequest({ body: createTasksSchema, headers: authHeaders }), tokenVerification, taskController.create);
 router.get('/', validateRequest({ query: paginationSchema }), tokenVerification, taskController.getAll);
 router.get('/:id', validateRequest({ params: taskSchema }), tokenVerification, taskController.getTaskById);

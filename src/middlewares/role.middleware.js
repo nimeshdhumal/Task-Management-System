@@ -10,7 +10,7 @@ const roleChecking = async (req, res, next) => {
             return res.status(401).json({ status: false, message: "Access Denied" });
         } else { logger.info('Admin Section: Your are admin.'); next(); }
     } catch (error) {
-        logger.error('Admin section: ',error);
+        logger.error('Role Checking middleware Failed: ', error);
         res.status(500).json({ status: false, message: error });
     }
 }

@@ -9,7 +9,7 @@ const authHeaders = require('../validators/auth.header.schema');
 const userController = require('../controllers/auth.controller');
 const logger = require('../utils/logger');
 
-logger.log('info', 'Route section execute..');
+logger.info('Auth Routes section started.');
 router.post('/signup', requestValidator({ body: signUpSchema, headers: commonHeaderSchema }), userController.signUp);
 router.post('/login', requestValidator({ body: loginSchema, headers: commonHeaderSchema }), userController.login);
 router.get('/me', verifyTokenMiddleware, adminRoleOnly, userController.getUserDetailsByToken);
